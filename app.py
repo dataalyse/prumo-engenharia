@@ -42,7 +42,6 @@ st.markdown(f"""
   html, body, [class*="css"] {{ font-family:'IBM Plex Sans',sans-serif; color:{GIZ}; }}
   h1,h2,h3 {{ font-family:'Archivo',sans-serif; letter-spacing:-.02em; color:{GIZ}; }}
   section[data-testid="stSidebar"] {{ background:{GRAFITE}; border-right:1px solid {CHUMBO}; }}
-
   /* marca: o fio de prumo desce do topo e termina no peso */
   .marca {{ display:flex; align-items:center; gap:14px; padding:2px 0 18px 0; }}
   .fio {{ width:2px; height:46px; background:linear-gradient(180deg,{CHUMBO} 0%,{LATAO} 100%);
@@ -52,7 +51,6 @@ st.markdown(f"""
   .marca h1 {{ margin:0; font-size:1.55rem; font-weight:700; }}
   .marca span {{ display:block; font-family:'IBM Plex Mono',monospace; font-size:.68rem;
           letter-spacing:.22em; text-transform:uppercase; color:{CONCRETO}; margin-top:2px; }}
-
   /* cartao de indicador */
   .kpi {{ background:{GRAFITE}; border:1px solid {CHUMBO}; border-left:3px solid {CHUMBO};
           border-radius:3px; padding:14px 16px; height:100%; }}
@@ -64,11 +62,9 @@ st.markdown(f"""
   .kpi .val {{ font-family:'IBM Plex Mono',monospace; font-size:1.72rem; font-weight:600;
           color:{GIZ}; line-height:1.35; }}
   .kpi .sub {{ font-size:.76rem; color:{CONCRETO}; }}
-
   /* titulo de secao com o fio a esquerda */
   .sec {{ font-family:'Archivo',sans-serif; font-size:1.02rem; font-weight:600;
           border-left:3px solid {LATAO}; padding:1px 0 1px 11px; margin:26px 0 12px 0; }}
-
   /* linha do tempo de eventos */
   .ev {{ background:{GRAFITE}; border:1px solid {CHUMBO}; border-left:3px solid {FORA};
          border-radius:3px; padding:11px 14px; margin-bottom:9px; }}
@@ -78,7 +74,6 @@ st.markdown(f"""
   .ev .tit {{ font-weight:600; font-size:.93rem; margin:3px 0 4px 0; }}
   .ev .txt {{ font-size:.81rem; color:{CONCRETO}; line-height:1.5; }}
   .ev .acao {{ font-size:.79rem; color:{APRUMADO}; margin-top:6px; }}
-
   [data-testid="stDataFrame"] {{ border:1px solid {CHUMBO}; border-radius:3px; }}
   #MainMenu, footer {{ visibility:hidden; }}
 </style>
