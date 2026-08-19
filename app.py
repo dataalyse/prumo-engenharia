@@ -35,11 +35,24 @@ ACO      = "#5E7E9E"   # linha de referencia (previsto)
 st.set_page_config(page_title="Prumo Engenharia | Painel de Obras",
                    page_icon="⚖", layout="wide")
 
+# tamanho de fonte ajustavel: o widget real e criado mais abaixo (na sidebar,
+# junto do menu), mas o valor precisa existir aqui em cima porque o CSS e o
+# tamanho de fonte dos graficos Plotly sao montados antes disso no script.
+ESCALAS = {"Pequena": .85, "Média": 1.0, "Grande": 1.2}
+_escala_nome = st.session_state.get("font_scale", "Média")
+ESC = ESCALAS[_escala_nome]
+
+
+def px(n):
+    """Escala um tamanho de fonte de grafico (Plotly nao aceita rem/em)."""
+    return round(n * ESC)
+
+
 st.markdown(f"""
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   .stApp {{ background:radial-gradient(120% 100% at 15% 0%, #131a22 0%, {BREU} 55%) fixed; }}
-  html, body, [class*="css"] {{ font-family:'IBM Plex Sans',sans-serif; color:{GIZ}; font-size:18px; }}
+  html, body, [class*="css"] {{ font-family:'IBM Plex Sans',sans-serif; color:{GIZ}; font-size:{px(18)}px; }}
   h1,h2,h3 {{ font-family:'Archivo',sans-serif; letter-spacing:-.02em; color:{GIZ}; }}
   section[data-testid="stSidebar"] {{ background:{GRAFITE}; border-right:1px solid {CHUMBO}; }}
   section[data-testid="stSidebar"] label p {{ font-size:1.1rem !important; font-weight:600; }}
@@ -125,17 +138,17 @@ def base_layout(fig, altura=380, legenda=True):
     fig.update_layout(
         height=altura + (38 if legenda else 0),
         paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(family="IBM Plex Sans", color=CONCRETO, size=16),
+        font=dict(family="IBM Plex Sans", color=CONCRETO, size=px(16)),
         margin=dict(l=10, r=16, t=50, b=(62 if legenda else 16)),
         hovermode="x unified",
         showlegend=legenda,
         legend=dict(orientation="h", y=-0.24, yanchor="top", x=0, xanchor="left",
-                    bgcolor="rgba(0,0,0,0)", font=dict(size=15)),
-        title=dict(font=dict(family="Archivo", size=21, color=GIZ), x=0, xanchor="left",
+                    bgcolor="rgba(0,0,0,0)", font=dict(size=px(15))),
+        title=dict(font=dict(family="Archivo", size=px(21), color=GIZ), x=0, xanchor="left",
                    y=0.97, yanchor="top"),
     )
-    fig.update_xaxes(showgrid=False, linecolor=CHUMBO, tickfont=dict(size=15))
-    fig.update_yaxes(gridcolor=CHUMBO, griddash="dot", zeroline=False, tickfont=dict(size=15))
+    fig.update_xaxes(showgrid=False, linecolor=CHUMBO, tickfont=dict(size=px(15)))
+    fig.update_yaxes(gridcolor=CHUMBO, griddash="dot", zeroline=False, tickfont=dict(size=px(15)))
     return fig
 
 
@@ -145,11 +158,11 @@ def gauge(valor, meta, titulo, cor, sufixo="%", altura=250):
     fig = go.Figure(go.Indicator(
         mode="gauge+number+delta",
         value=valor,
-        number=dict(suffix=sufixo, font=dict(size=38, color=GIZ, family="Space Grotesk")),
+        number=dict(suffix=sufixo, font=dict(size=px(38), color=GIZ, family="Space Grotesk")),
         delta=dict(reference=meta, increasing=dict(color=APRUMADO), decreasing=dict(color=FORA),
-                   font=dict(size=16)),
+                   font=dict(size=px(16))),
         gauge=dict(
-            axis=dict(range=[0, 100], tickfont=dict(size=13, color=CONCRETO)),
+            axis=dict(range=[0, 100], tickfont=dict(size=px(13), color=CONCRETO)),
             bar=dict(color=cor, thickness=.32),
             bgcolor="rgba(0,0,0,0)", borderwidth=0,
             steps=[dict(range=[0, meta], color="rgba(214,90,78,.10)"),
@@ -158,10 +171,10 @@ def gauge(valor, meta, titulo, cor, sufixo="%", altura=250):
         ),
     ))
     fig.update_layout(
-        title=dict(text=titulo, font=dict(family="Archivo", size=17, color=GIZ),
+        title=dict(text=titulo, font=dict(family="Archivo", size=px(17), color=GIZ),
                    x=.5, xanchor="center"),
         height=altura, margin=dict(l=24, r=24, t=54, b=10),
-        paper_bgcolor="rgba(0,0,0,0)", font=dict(color=CONCRETO, size=15),
+        paper_bgcolor="rgba(0,0,0,0)", font=dict(color=CONCRETO, size=px(15)),
     )
     return fig
 
@@ -176,6 +189,9 @@ pagina = st.sidebar.radio(
     label_visibility="collapsed")
 
 obras = q("SELECT * FROM dim_obra ORDER BY id_obra")
+st.sidebar.markdown("---")
+st.sidebar.radio("Tamanho da fonte", list(ESCALAS), horizontal=True, key="font_scale",
+                  index=list(ESCALAS).index(_escala_nome))
 st.sidebar.markdown("---")
 st.sidebar.caption(
     "Posição de agosto/2026.  \n"
@@ -237,7 +253,7 @@ if pagina == "Portfólio":
                     marker_color=[FORA if v > 5 else (LATAO if v > 0 else APRUMADO)
                                   for v in d["desvio_custo_pct"]],
                     text=[f"{v:+.1f}%" for v in d["desvio_custo_pct"]],
-                    textposition="outside", textfont=dict(family="IBM Plex Mono", color=GIZ, size=15),
+                    textposition="outside", textfont=dict(family="IBM Plex Mono", color=GIZ, size=px(15)),
                     hovertemplate="%{y}<br>desvio de custo %{x:+.1f}%<extra></extra>")
         fig.add_vline(x=0, line_color=CHUMBO)
         fig.update_layout(title="Desvio de custo por obra")
@@ -252,7 +268,7 @@ if pagina == "Portfólio":
                 marker=dict(size=r["orcamento_previsto"] / 6e5, color=LATAO,
                             line=dict(color=BREU, width=2), opacity=.85),
                 text=[r["nome_obra"].split()[0]], textposition="top center",
-                textfont=dict(size=14, color=CONCRETO), name=r["nome_obra"],
+                textfont=dict(size=px(14), color=CONCRETO), name=r["nome_obra"],
                 hovertemplate=f"<b>{r['nome_obra']}</b><br>prazo %{{x:+.1f}} p.p."
                               f"<br>custo %{{y:+.1f}}%<extra></extra>")
         fig.add_vline(x=0, line_color=CHUMBO)
@@ -528,7 +544,7 @@ elif pagina == "Segurança e Qualidade":
         fig.update_layout(title="Retrabalho × aprovação na primeira inspeção",
                           yaxis2=dict(overlaying="y", side="right", range=[0, 100],
                                       ticksuffix="%", showgrid=False,
-                                      tickfont=dict(color=CONCRETO, size=15)))
+                                      tickfont=dict(color=CONCRETO, size=px(15))))
         st.plotly_chart(base_layout(fig, 320), width="stretch")
     with g3:
         st.plotly_chart(gauge(fvs, 90, "FVS aprovada de 1ª", APRUMADO, altura=354),
@@ -600,15 +616,15 @@ else:
         fig = go.Figure(go.Pie(
             labels=["Vendidas", "Em estoque"], values=[vendidas, estoque], hole=.64,
             marker=dict(colors=[APRUMADO, LATAO], line=dict(color=BREU, width=2)),
-            textinfo="percent", textfont=dict(size=16, color=GIZ),
+            textinfo="percent", textfont=dict(size=px(16), color=GIZ),
             hovertemplate="%{label}<br>%{value} un. · %{percent}<extra></extra>"))
         fig.update_layout(
-            title=dict(text="Vendidas × estoque", font=dict(family="Archivo", size=17, color=GIZ),
+            title=dict(text="Vendidas × estoque", font=dict(family="Archivo", size=px(17), color=GIZ),
                        x=.5, xanchor="center"),
             height=280, margin=dict(l=10, r=10, t=50, b=40),
-            paper_bgcolor="rgba(0,0,0,0)", font=dict(color=CONCRETO, size=14),
+            paper_bgcolor="rgba(0,0,0,0)", font=dict(color=CONCRETO, size=px(14)),
             showlegend=True,
-            legend=dict(orientation="h", y=-0.12, x=.5, xanchor="center", font=dict(size=14)),
+            legend=dict(orientation="h", y=-0.12, x=.5, xanchor="center", font=dict(size=px(14))),
             annotations=[dict(text=f"{vendidas + estoque}<br>un.", x=.5, y=.54, showarrow=False,
-                              font=dict(size=20, color=GIZ, family="Space Grotesk"))])
+                              font=dict(size=px(20), color=GIZ, family="Space Grotesk"))])
         st.plotly_chart(fig, width="stretch")
