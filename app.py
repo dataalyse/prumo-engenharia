@@ -293,7 +293,9 @@ if pagina == "Portfólio":
 
 # ================================================================ OBRA
 elif pagina == "Obra":
-    nome = st.sidebar.selectbox("Obra", obras["nome_obra"])
+    col_sel, _ = st.columns([1, 2])
+    with col_sel:
+        nome = st.selectbox("Obra", obras["nome_obra"])
     o = obras[obras["nome_obra"] == nome].iloc[0]
     idb = int(o["id_obra"])
 
