@@ -36,45 +36,57 @@ st.set_page_config(page_title="Prumo Engenharia | Painel de Obras",
                    page_icon="⚖", layout="wide")
 
 st.markdown(f"""
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  .stApp {{ background:{BREU}; }}
-  html, body, [class*="css"] {{ font-family:'IBM Plex Sans',sans-serif; color:{GIZ}; }}
+  .stApp {{ background:radial-gradient(120% 100% at 15% 0%, #131a22 0%, {BREU} 55%) fixed; }}
+  html, body, [class*="css"] {{ font-family:'IBM Plex Sans',sans-serif; color:{GIZ}; font-size:16px; }}
   h1,h2,h3 {{ font-family:'Archivo',sans-serif; letter-spacing:-.02em; color:{GIZ}; }}
   section[data-testid="stSidebar"] {{ background:{GRAFITE}; border-right:1px solid {CHUMBO}; }}
+  section[data-testid="stSidebar"] label p {{ font-size:1rem !important; font-weight:600; }}
   /* marca: o fio de prumo desce do topo e termina no peso */
   .marca {{ display:flex; align-items:center; gap:14px; padding:2px 0 18px 0; }}
-  .fio {{ width:2px; height:46px; background:linear-gradient(180deg,{CHUMBO} 0%,{LATAO} 100%);
-          position:relative; flex:none; }}
-  .fio::after {{ content:""; position:absolute; bottom:-7px; left:-4px; width:10px; height:10px;
-          background:{LATAO}; transform:rotate(45deg); }}
-  .marca h1 {{ margin:0; font-size:1.55rem; font-weight:700; }}
-  .marca span {{ display:block; font-family:'IBM Plex Mono',monospace; font-size:.68rem;
-          letter-spacing:.22em; text-transform:uppercase; color:{CONCRETO}; margin-top:2px; }}
-  /* cartao de indicador */
-  .kpi {{ background:{GRAFITE}; border:1px solid {CHUMBO}; border-left:3px solid {CHUMBO};
-          border-radius:3px; padding:14px 16px; height:100%; }}
-  .kpi.ok {{ border-left-color:{APRUMADO}; }}
-  .kpi.alerta {{ border-left-color:{LATAO}; }}
-  .kpi.critico {{ border-left-color:{FORA}; }}
-  .kpi .rot {{ font-family:'IBM Plex Mono',monospace; font-size:.63rem; letter-spacing:.16em;
+  .fio {{ width:3px; height:50px; background:linear-gradient(180deg,{CHUMBO} 0%,{LATAO} 100%);
+          position:relative; flex:none; box-shadow:0 0 12px rgba(217,164,65,.55); }}
+  .fio::after {{ content:""; position:absolute; bottom:-7px; left:-4.5px; width:12px; height:12px;
+          background:{LATAO}; transform:rotate(45deg); box-shadow:0 0 10px rgba(217,164,65,.8); }}
+  .marca h1 {{ margin:0; font-family:'Space Grotesk',sans-serif; font-size:1.85rem; font-weight:700;
+          letter-spacing:-.01em; }}
+  .marca span {{ display:block; font-family:'IBM Plex Mono',monospace; font-size:.78rem;
+          letter-spacing:.24em; text-transform:uppercase; color:{CONCRETO}; margin-top:3px; }}
+  /* cartao de indicador: leve vidro (glass), com brilho na cor do status */
+  .kpi {{ background:linear-gradient(160deg, rgba(28,37,48,.85) 0%, rgba(20,27,35,.65) 100%);
+          border:1px solid rgba(147,161,176,.16); border-left:4px solid {CHUMBO};
+          border-radius:10px; padding:18px 20px; height:100%;
+          backdrop-filter:blur(8px); box-shadow:0 10px 26px rgba(0,0,0,.35); }}
+  .kpi.ok {{ border-left-color:{APRUMADO}; box-shadow:0 10px 26px rgba(0,0,0,.35), -6px 0 18px rgba(69,160,126,.18); }}
+  .kpi.alerta {{ border-left-color:{LATAO}; box-shadow:0 10px 26px rgba(0,0,0,.35), -6px 0 18px rgba(217,164,65,.18); }}
+  .kpi.critico {{ border-left-color:{FORA}; box-shadow:0 10px 26px rgba(0,0,0,.35), -6px 0 18px rgba(214,90,78,.20); }}
+  .kpi .rot {{ font-family:'IBM Plex Mono',monospace; font-size:.72rem; font-weight:600; letter-spacing:.14em;
           text-transform:uppercase; color:{CONCRETO}; }}
-  .kpi .val {{ font-family:'IBM Plex Mono',monospace; font-size:1.72rem; font-weight:600;
-          color:{GIZ}; line-height:1.35; }}
-  .kpi .sub {{ font-size:.76rem; color:{CONCRETO}; }}
+  .kpi .val {{ font-family:'Space Grotesk',sans-serif; font-size:2.05rem; font-weight:700;
+          color:{GIZ}; line-height:1.3; margin-top:2px; }}
+  .kpi .sub {{ font-size:.86rem; color:{CONCRETO}; margin-top:1px; }}
   /* titulo de secao com o fio a esquerda */
-  .sec {{ font-family:'Archivo',sans-serif; font-size:1.02rem; font-weight:600;
-          border-left:3px solid {LATAO}; padding:1px 0 1px 11px; margin:26px 0 12px 0; }}
+  .sec {{ font-family:'Archivo',sans-serif; font-size:1.28rem; font-weight:700;
+          border-left:4px solid {LATAO}; padding:2px 0 2px 13px; margin:30px 0 14px 0; }}
   /* linha do tempo de eventos */
-  .ev {{ background:{GRAFITE}; border:1px solid {CHUMBO}; border-left:3px solid {FORA};
-         border-radius:3px; padding:11px 14px; margin-bottom:9px; }}
+  .ev {{ background:linear-gradient(160deg, rgba(28,37,48,.8) 0%, rgba(20,27,35,.55) 100%);
+         border:1px solid rgba(147,161,176,.14); border-left:4px solid {FORA};
+         border-radius:10px; padding:13px 16px; margin-bottom:10px; backdrop-filter:blur(6px); }}
   .ev.resolucao {{ border-left-color:{APRUMADO}; }}
-  .ev .quando {{ font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.13em;
+  .ev .quando {{ font-family:'IBM Plex Mono',monospace; font-size:.74rem; font-weight:600; letter-spacing:.14em;
          text-transform:uppercase; color:{CONCRETO}; }}
-  .ev .tit {{ font-weight:600; font-size:.93rem; margin:3px 0 4px 0; }}
-  .ev .txt {{ font-size:.81rem; color:{CONCRETO}; line-height:1.5; }}
-  .ev .acao {{ font-size:.79rem; color:{APRUMADO}; margin-top:6px; }}
-  [data-testid="stDataFrame"] {{ border:1px solid {CHUMBO}; border-radius:3px; }}
+  .ev .tit {{ font-weight:700; font-size:1.06rem; margin:4px 0 4px 0; }}
+  .ev .txt {{ font-size:.92rem; color:{CONCRETO}; line-height:1.55; }}
+  .ev .acao {{ font-size:.9rem; font-weight:600; color:{APRUMADO}; margin-top:7px; }}
+  /* vidro por trás de cada gráfico e tabela: dá presença e agrupa visualmente */
+  div[data-testid="stPlotlyChart"] {{
+      background:linear-gradient(160deg, rgba(22,29,37,.55) 0%, rgba(22,29,37,.22) 100%);
+      border:1px solid rgba(147,161,176,.14); border-radius:12px;
+      padding:14px 10px 6px; backdrop-filter:blur(5px); }}
+  [data-testid="stDataFrame"] {{ border:1px solid rgba(147,161,176,.18); border-radius:10px;
+      background:rgba(22,29,37,.4); backdrop-filter:blur(5px); overflow:hidden; }}
+  [data-testid="stDataFrame"] * {{ font-size:.92rem !important; }}
   #MainMenu, footer {{ visibility:hidden; }}
 </style>
 """, unsafe_allow_html=True)
@@ -107,17 +119,49 @@ def sec(titulo):
 
 
 def base_layout(fig, altura=380, legenda=True):
+    # legenda vai ABAIXO do grafico (nao acima do titulo) para nunca colidir com
+    # ele — era isso que fazia titulo e nomes de serie se sobreporem no Comercial.
     fig.update_layout(
-        height=altura, paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(family="IBM Plex Sans", color=CONCRETO, size=12),
-        margin=dict(l=10, r=16, t=44, b=10), hovermode="x unified",
+        height=altura + (34 if legenda else 0),
+        paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+        font=dict(family="IBM Plex Sans", color=CONCRETO, size=14),
+        margin=dict(l=10, r=16, t=46, b=(56 if legenda else 14)),
+        hovermode="x unified",
         showlegend=legenda,
-        legend=dict(orientation="h", y=1.14, x=0, bgcolor="rgba(0,0,0,0)",
-                    font=dict(size=11)),
-        title=dict(font=dict(family="Archivo", size=14, color=GIZ), x=0, xanchor="left"),
+        legend=dict(orientation="h", y=-0.22, yanchor="top", x=0, xanchor="left",
+                    bgcolor="rgba(0,0,0,0)", font=dict(size=13)),
+        title=dict(font=dict(family="Archivo", size=18, color=GIZ), x=0, xanchor="left",
+                   y=0.97, yanchor="top"),
     )
-    fig.update_xaxes(showgrid=False, linecolor=CHUMBO, tickfont=dict(size=11))
-    fig.update_yaxes(gridcolor=CHUMBO, griddash="dot", zeroline=False, tickfont=dict(size=11))
+    fig.update_xaxes(showgrid=False, linecolor=CHUMBO, tickfont=dict(size=13))
+    fig.update_yaxes(gridcolor=CHUMBO, griddash="dot", zeroline=False, tickfont=dict(size=13))
+    return fig
+
+
+def gauge(valor, meta, titulo, cor, sufixo="%", altura=250):
+    """Gauge (medidor) para uma metrica-alvo em % — leitura mais rapida e
+    visual mais atual do que so o numero cru no cartao de KPI."""
+    fig = go.Figure(go.Indicator(
+        mode="gauge+number+delta",
+        value=valor,
+        number=dict(suffix=sufixo, font=dict(size=32, color=GIZ, family="Space Grotesk")),
+        delta=dict(reference=meta, increasing=dict(color=APRUMADO), decreasing=dict(color=FORA),
+                   font=dict(size=14)),
+        gauge=dict(
+            axis=dict(range=[0, 100], tickfont=dict(size=11, color=CONCRETO)),
+            bar=dict(color=cor, thickness=.32),
+            bgcolor="rgba(0,0,0,0)", borderwidth=0,
+            steps=[dict(range=[0, meta], color="rgba(214,90,78,.10)"),
+                   dict(range=[meta, 100], color="rgba(69,160,126,.10)")],
+            threshold=dict(line=dict(color=GIZ, width=2), thickness=.85, value=meta),
+        ),
+    ))
+    fig.update_layout(
+        title=dict(text=titulo, font=dict(family="Archivo", size=15, color=GIZ),
+                   x=.5, xanchor="center"),
+        height=altura, margin=dict(l=24, r=24, t=52, b=10),
+        paper_bgcolor="rgba(0,0,0,0)", font=dict(color=CONCRETO, size=13),
+    )
     return fig
 
 
@@ -192,7 +236,7 @@ if pagina == "Portfólio":
                     marker_color=[FORA if v > 5 else (LATAO if v > 0 else APRUMADO)
                                   for v in d["desvio_custo_pct"]],
                     text=[f"{v:+.1f}%" for v in d["desvio_custo_pct"]],
-                    textposition="outside", textfont=dict(family="IBM Plex Mono", color=GIZ),
+                    textposition="outside", textfont=dict(family="IBM Plex Mono", color=GIZ, size=13),
                     hovertemplate="%{y}<br>desvio de custo %{x:+.1f}%<extra></extra>")
         fig.add_vline(x=0, line_color=CHUMBO)
         fig.update_layout(title="Desvio de custo por obra")
@@ -206,8 +250,8 @@ if pagina == "Portfólio":
                 x=[r["desvio_prazo_pp"]], y=[r["desvio_custo_pct"]], mode="markers+text",
                 marker=dict(size=r["orcamento_previsto"] / 6e5, color=LATAO,
                             line=dict(color=BREU, width=2), opacity=.85),
-                text=[r["nome_obra"].split()[-1]], textposition="top center",
-                textfont=dict(size=10, color=CONCRETO), name=r["nome_obra"],
+                text=[r["nome_obra"].split()[0]], textposition="top center",
+                textfont=dict(size=12, color=CONCRETO), name=r["nome_obra"],
                 hovertemplate=f"<b>{r['nome_obra']}</b><br>prazo %{{x:+.1f}} p.p."
                               f"<br>custo %{{y:+.1f}}%<extra></extra>")
         fig.add_vline(x=0, line_color=CHUMBO)
@@ -276,7 +320,7 @@ elif pagina == "Obra":
                     hovertemplate="planejado %{y:.1f}%<extra></extra>")
     fig.add_scatter(x=real["nome_mes"], y=real["avanco_real_acum"] * 100, name="Realizado",
                     line=dict(color=LATAO, width=3), fill="tonexty",
-                    fillcolor="rgba(214,90,78,0.13)",
+                    fillcolor="rgba(214,90,78,0.22)",
                     hovertemplate="realizado %{y:.1f}%<extra></extra>")
     # fios de prumo: um segmento vertical por mes, do plano ate o real
     for _, r in real.iterrows():
@@ -321,7 +365,7 @@ elif pagina == "Obra":
                         line=dict(color=ACO, width=2, dash="dot"))
         fig.add_scatter(x=cu2["ano_mes"], y=cu2["ac_real"], name="Realizado",
                         line=dict(color=FORA, width=3), fill="tonexty",
-                        fillcolor="rgba(214,90,78,0.13)")
+                        fillcolor="rgba(214,90,78,0.22)")
         fig.update_layout(title="Custo acumulado (R$ mi)")
         st.plotly_chart(base_layout(fig, 300), width="stretch")
 
@@ -387,7 +431,7 @@ elif pagina == "Suprimentos":
     mes = co.groupby("ano_mes").agg(
         otif=("entrega_otif", "mean"), saving=("saving_pct", "mean"),
         lead=("lead_time_real_dias", "mean")).reset_index()
-    g1, g2 = st.columns(2)
+    g1, g2, g3 = st.columns([2, 2, 1.3])
     with g1:
         fig = go.Figure()
         fig.add_bar(x=mes["ano_mes"], y=mes["otif"] * 100,
@@ -408,6 +452,9 @@ elif pagina == "Suprimentos":
         fig.update_layout(title="Saving médio mensal (%)")
         fig.update_yaxes(ticksuffix="%")
         st.plotly_chart(base_layout(fig, 320, False), width="stretch")
+    with g3:
+        st.plotly_chart(gauge(otif, 85, "OTIF do período", LATAO, altura=354),
+                         width="stretch")
 
     sec("Ranking de fornecedores")
     rank = co.groupby(["nome_fornecedor", "curva_abc"]).agg(
@@ -460,7 +507,7 @@ elif pagina == "Segurança e Qualidade":
                                   dias=("dias_perdidos", "sum"),
                                   hht=("hht", "sum")).reset_index()
     m["tf"] = m["ca"] / m["hht"] * 1e6
-    g1, g2 = st.columns(2)
+    g1, g2, g3 = st.columns([2, 2, 1.3])
     with g1:
         fig = go.Figure()
         fig.add_bar(x=m["ano_mes"], y=m["dias"], marker_color=FORA,
@@ -480,8 +527,11 @@ elif pagina == "Segurança e Qualidade":
         fig.update_layout(title="Retrabalho × aprovação na primeira inspeção",
                           yaxis2=dict(overlaying="y", side="right", range=[0, 100],
                                       ticksuffix="%", showgrid=False,
-                                      tickfont=dict(color=CONCRETO, size=11)))
+                                      tickfont=dict(color=CONCRETO, size=13)))
         st.plotly_chart(base_layout(fig, 320), width="stretch")
+    with g3:
+        st.plotly_chart(gauge(fvs, 90, "FVS aprovada de 1ª", APRUMADO, altura=354),
+                         width="stretch")
 
     sec("Retrabalho por obra e etapa")
     piv = ql.groupby(["nome_obra"]).agg(
@@ -535,9 +585,29 @@ else:
     st.plotly_chart(base_layout(fig, 380), width="stretch")
 
     sec("Estoque e carteira")
-    tab = ult[["nome_obra", "unidades_totais", "unidades_vendidas_acum", "estoque_unidades",
-               "ticket_medio", "inadimplencia_pct"]].copy()
-    tab.columns = ["Obra", "Unidades", "Vendidas", "Estoque", "Ticket médio", "Inadimplência %"]
-    st.dataframe(
-        tab.style.format({"Ticket médio": lambda v: brl(v), "Inadimplência %": "{:.1f}%"}),
-        width="stretch", hide_index=True)
+    t1, t2 = st.columns([2.2, 1])
+    with t1:
+        tab = ult[["nome_obra", "unidades_totais", "unidades_vendidas_acum", "estoque_unidades",
+                   "ticket_medio", "inadimplencia_pct"]].copy()
+        tab.columns = ["Obra", "Unidades", "Vendidas", "Estoque", "Ticket médio", "Inadimplência %"]
+        st.dataframe(
+            tab.style.format({"Ticket médio": lambda v: brl(v), "Inadimplência %": "{:.1f}%"}),
+            width="stretch", hide_index=True)
+    with t2:
+        vendidas = int(ult["unidades_vendidas_acum"].sum())
+        estoque = int(ult["estoque_unidades"].sum())
+        fig = go.Figure(go.Pie(
+            labels=["Vendidas", "Em estoque"], values=[vendidas, estoque], hole=.64,
+            marker=dict(colors=[APRUMADO, LATAO], line=dict(color=BREU, width=2)),
+            textinfo="percent", textfont=dict(size=14, color=GIZ),
+            hovertemplate="%{label}<br>%{value} un. · %{percent}<extra></extra>"))
+        fig.update_layout(
+            title=dict(text="Vendidas × estoque", font=dict(family="Archivo", size=15, color=GIZ),
+                       x=.5, xanchor="center"),
+            height=280, margin=dict(l=10, r=10, t=50, b=40),
+            paper_bgcolor="rgba(0,0,0,0)", font=dict(color=CONCRETO, size=13),
+            showlegend=True,
+            legend=dict(orientation="h", y=-0.12, x=.5, xanchor="center", font=dict(size=12)),
+            annotations=[dict(text=f"{vendidas + estoque}<br>un.", x=.5, y=.54, showarrow=False,
+                              font=dict(size=17, color=GIZ, family="Space Grotesk"))])
+        st.plotly_chart(fig, width="stretch")
